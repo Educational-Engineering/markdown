@@ -25,7 +25,8 @@
     "cheerio": "^0.20.0",
     "jquery": "^3.0.0",
     "jsdom": "^9.2.1",
-    "marked": "^0.3.5",
+    "markdown-it": "^7.0.0",
+    "markdown-it-anchor": "^2.5.0",
     "underscore": "^1.8.3"
   }
 }

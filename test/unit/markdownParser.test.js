@@ -2,7 +2,7 @@
 
 import { expect } from 'chai';
 
-import { MarkdownParser } from '../../lib/MarkdownParser';
+import { MarkdownParser } from '../../src/MarkdownParser';
 
 describe('MarkdownParser', function () {
   var mdParser = new MarkdownParser();
@@ -54,17 +54,6 @@ describe('MarkdownParser', function () {
       expect(mdParser.generatePath('hello/', 'mist')).to.be.equal('hello/mist');
     });
   });
-  describe('AddBlocks', function () {
-    it('Add Blocks', function () {
-      var html = '@BEGIN@ tester @END@';
-      expect(mdParser.addBlocks(html)).to.be.equal('<div> tester </div>');
-    });
-    it('Add complex Blocks', function () {
-      var html = 'test @BEGIN@ @END@ test @BEGIN@ tester @END@';
-      expect(mdParser.addBlocks(html)).to.be.equal('test <div> </div> test <div> tester </div>');
-    });
-  });
-
   describe('CleanMarkdown', function () {
     it('Remove classes', function () {
       var html = '<div>{:.test .test} hello<span>mist{:.test}</span></div>';
@@ -97,13 +86,4 @@ describe('MarkdownParser', function () {
     });
   });
 
-  describe('makeQuiz', function() {
-    xit('Parse Quiz', function() {
-      var html = '@BEGIN@{:.quiz}\n - 1\n - 2{:.correct}\n@END@';
-      var resultat = '<div class="quiz">\n<div><div class="checkbox"><label><input type="checkbox" data-value="false">1</label></div></div><div><div class="checkbox">' +
-        '<label><input type="checkbox" data-value="true">2\n</label></div></div><div class="center">' +
-        '<button type="button" class="btn btn-quiz btn-default">' + TAPi18n.__('_quiz_check') + '</button></div></div>\n\n';
-      expect(mdParser.parseMarkdown(html)).to.be.equal(resultat);
-    });
-  })
 });
