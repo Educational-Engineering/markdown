@@ -22,7 +22,7 @@ npm install @et/markdown
 And include in your project:
 
 ```javascript
-import @et/markdown from '@et/markdown';
+import MarkdownParser from '@et/markdown';
 ```
 
 ## License
