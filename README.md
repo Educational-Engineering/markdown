@@ -16,13 +16,13 @@ A markdown rendere for the E.Tutorial
 Install it via npm:
 
 ```shell
-npm install @et/markdown
+npm install etutorial-markdown
 ```
 
 And include in your project:
 
 ```javascript
-import MarkdownParser from '@et/markdown';
+import MarkdownParser from 'eturorial-markdown';
 ```
 
 ## License
