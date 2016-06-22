@@ -4,7 +4,10 @@
   "version": "0.1.0",
   "main": "lib/index.js",
   "author": "David Sichau",
-  "repository": "Educational-Engineering/markdown",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Educational-Engineering/markdown.git"
+  },
   "license": "MIT",
   "scripts": {
     "compile": "babel src --out-dir lib",
