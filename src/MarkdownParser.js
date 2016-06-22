@@ -1,9 +1,10 @@
-import marked from 'marked';
 import _ from 'underscore';
-import cheerio  from 'cheerio';
+import cheerio from 'cheerio';
 import MarkdownIt from 'markdown-it';
 import MarkdownItAnchor from 'markdown-it-anchor';
-import requirementPlugin from "./remarkdown-et";
+import hljs from 'highlight';
+
+import requirementPlugin from './remarkdown-et';
 
 
 export class MarkdownParser {
@@ -13,24 +14,10 @@ export class MarkdownParser {
    * @constructor
    */
   constructor() {
-    this.picturePath = "/";
+    this.picturePath = '/';
     this.reClass = /\{:((\s|\S)*?)\}/;
     this.reClassGlobal = /\{:((\s|\S)*?)\}/gm;
     this.reEmptyParagraph = /<p>\s*<\/p>/g;
-
-    // Synchronous highlighting with highlight.js
-    marked.setOptions({
-      highlight: function (code, lang) {
-        var high = null;
-        if (lang) {
-          high = hljs.highlightAuto(code, [lang]); // jshint ignore:line
-        } else {
-          high = hljs.highlightAuto(code); // jshint ignore:line
-        }
-        return high.value;
-      }
-    });
-
   }
   /**
    * extract the classes in a string where the classes are
@@ -40,22 +27,22 @@ export class MarkdownParser {
    * @return {String} a string containing all class names
    */
   extractClasses(text) {
-    var classes = [];
+    const classes = [];
     if (text.match(this.reClassGlobal).length > 1) {
       throw new Error('to much class identifiers');
     }
 
-    var splitedClasses = text.match(this.reClass)[1].split(/[ ]+/);
-    splitedClasses.forEach(function (element) {
-      var tempStr = element.trim();
+    const splitedClasses = text.match(this.reClass)[1].split(/[ ]+/);
+    splitedClasses.forEach((element) => {
+      const tempStr = element.trim();
       if (tempStr[0] === '.') {
         classes.push(tempStr.substring(1));
       } else {
-        throw new Error("it must be a class!");
+        throw new Error('it must be a class!');
       }
     });
-    return classes.join(" ");
-  };
+    return classes.join(' ');
+  }
 
   /**
    * Generates the correct path
@@ -68,11 +55,10 @@ export class MarkdownParser {
     if (path[0] === '/' && _.last(url) === '/') {
       return url + path.slice(1);
     } else if (path[0] !== '/' && _.last(url) !== '/') {
-      return url + '/' + path;
-    } else {
-      return url + path;
+      return `${url}/${path}`;
     }
-  };
+    return url + path;
+  }
 
   /**
    * Cleans the markdown from empty paragraphs
@@ -81,9 +67,9 @@ export class MarkdownParser {
    * @return {String} the cleaned markdown
    */
   cleanMarkdown(input) {
-    input = input.replace(this.reClassGlobal, "");
-    return input.replace(this.reEmptyParagraph, '');
-  };
+    const temp = input.replace(this.reClassGlobal, '');
+    return temp.replace(this.reEmptyParagraph, '');
+  }
 
   /**
    * Parses the classes
@@ -92,25 +78,28 @@ export class MarkdownParser {
    * @return {String} The html with added Classes
    */
   parseClasses(html) {
-    var _this = this;
-    var re = this.reClass;
-    var tree = cheerio('<div>' + html + '</div>');
+    const self = this;
+    const re = this.reClass;
+    const tree = cheerio(`<div>${html}</div>`);
 
-    //find all occurences where the regex matches
-    tree.find('*').filter(function () {
-      return cheerio(this).first().contents().filter(function() {
-        return this.type === 'text';
-      }).text().match(re);
-    }).each(function (index, element) {
-      //add the classes to the parent
-      cheerio(element).addClass(_this.extractClasses(cheerio(element).first().contents().filter(function() {
+    // find all occurences where the regex matches
+    tree.find('*').filter(function filter() {
+      return cheerio(this).first().contents()
+        .filter(() => this.type === 'text')
+        .text()
+        .match(re);
+    }).each((index, element) => {
+      // add the classes to the parent
+      cheerio(element).addClass(self.extractClasses(cheerio(element).first().contents()
+        .filter(function findText() {
           return this.type === 'text';
-        }).text()
+        })
+        .text()
       ));
     });
 
     return tree.html();
-  };
+  }
 
   /**
    * Parses the markdown with the individual extensions. They are
@@ -120,17 +109,23 @@ export class MarkdownParser {
    * @param {String} input The markdown string
    * @return {String} The html string
    */
-  parseMarkdown (input, postProcessing) {
-    // console.log("blibber");
-    const md = new MarkdownIt();
+  parseMarkdown(input, postProcessing) {
+    const md = new MarkdownIt({
+      highlight(str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+          return hljs.highlight(lang, str).value;
+        }
+        return ''; // use external default escaping
+      },
+    });
     md.use(MarkdownItAnchor);
     md.use(requirementPlugin);
     let html = md.render(input);
     html = this.parseClasses(html);
-    if(postProcessing) {
+    if (postProcessing) {
       html = postProcessing(html);
     }
     html = this.cleanMarkdown(html);
     return html;
-  };
+  }
 }

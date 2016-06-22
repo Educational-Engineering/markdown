@@ -30,16 +30,11 @@
   "eslintConfig": {
     "extends": [
       "airbnb"
-    ],
-    "rules": {
-      "indent": [
-        2,
-        4
-      ]
-    }
+    ]
   },
   "dependencies": {
     "cheerio": "^0.20.0",
+    "highlight": "^0.2.4",
     "jquery": "^3.0.0",
     "jsdom": "^9.2.1",
     "markdown-it": "^7.0.0",
