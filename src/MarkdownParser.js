@@ -4,7 +4,8 @@ import MarkdownIt from 'markdown-it';
 import MarkdownItAnchor from 'markdown-it-anchor';
 import hljs from 'highlight';
 
-import requirementPlugin from './remarkdown-et';
+import etPlugin from './remarkdown-et';
+import quizPlugin from './remarkdown-et-quiz';
 
 
 export class MarkdownParser {
@@ -119,7 +120,8 @@ export class MarkdownParser {
       },
     });
     md.use(MarkdownItAnchor);
-    md.use(requirementPlugin);
+    md.use(etPlugin);
+    md.use(quizPlugin);
     let html = md.render(input);
     html = this.parseClasses(html);
     if (postProcessing) {
