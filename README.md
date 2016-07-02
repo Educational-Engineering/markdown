@@ -31,6 +31,7 @@ MIT
 
 ## ChangeLog
 
+- 0.4.0: Rendering of Codeboard blocks
 - 0.3.0: Rendering of tests is now included
 - 0.2.0: Added the posibility to have nested blocks
 - 0.1.0: First public release

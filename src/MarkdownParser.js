@@ -1,11 +1,11 @@
 import _ from 'underscore';
-import cheerio from 'cheerio';
 import MarkdownIt from 'markdown-it';
 import MarkdownItAnchor from 'markdown-it-anchor';
 import hljs from 'highlight';
 
 import etPlugin from './remarkdown-et';
 import quizPlugin from './remarkdown-et-quiz';
+import codeboardPlugin from './remarkdown-codeboard';
 
 
 export class MarkdownParser {
@@ -16,33 +16,8 @@ export class MarkdownParser {
    */
   constructor() {
     this.picturePath = '/';
-    this.reClass = /\{:((\s|\S)*?)\}/;
     this.reClassGlobal = /\{:((\s|\S)*?)\}/gm;
     this.reEmptyParagraph = /<p>\s*<\/p>/g;
-  }
-  /**
-   * extract the classes in a string where the classes are
-   * provided like: {: .class1 .class2}
-   * @method extractClasses
-   * @param {String} text The text where the classes are extracted
-   * @return {String} a string containing all class names
-   */
-  extractClasses(text) {
-    const classes = [];
-    if (text.match(this.reClassGlobal).length > 1) {
-      throw new Error('to much class identifiers');
-    }
-
-    const splitedClasses = text.match(this.reClass)[1].split(/[ ]+/);
-    splitedClasses.forEach((element) => {
-      const tempStr = element.trim();
-      if (tempStr[0] === '.') {
-        classes.push(tempStr.substring(1));
-      } else {
-        throw new Error('it must be a class!');
-      }
-    });
-    return classes.join(' ');
   }
 
   /**
@@ -72,35 +47,6 @@ export class MarkdownParser {
     return temp.replace(this.reEmptyParagraph, '');
   }
 
-  /**
-   * Parses the classes
-   * @method parseClasses
-   * @param {String} html the html
-   * @return {String} The html with added Classes
-   */
-  parseClasses(html) {
-    const self = this;
-    const re = this.reClass;
-    const tree = cheerio(`<div>${html}</div>`);
-
-    // find all occurences where the regex matches
-    tree.find('*').filter(function filter() {
-      return cheerio(this).first().contents()
-        .filter(() => this.type === 'text')
-        .text()
-        .match(re);
-    }).each((index, element) => {
-      // add the classes to the parent
-      cheerio(element).addClass(self.extractClasses(cheerio(element).first().contents()
-        .filter(function findText() {
-          return this.type === 'text';
-        })
-        .text()
-      ));
-    });
-
-    return tree.html();
-  }
 
   /**
    * Parses the markdown with the individual extensions. They are
@@ -121,9 +67,13 @@ export class MarkdownParser {
     });
     md.use(MarkdownItAnchor);
     md.use(etPlugin);
-    md.use(quizPlugin);
+    md.use(quizPlugin, {
+      buttonName: 'check',
+    });
+    md.use(codeboardPlugin, {
+      buttonName: 'Open IDE',
+    });
     let html = md.render(input);
-    html = this.parseClasses(html);
     if (postProcessing) {
       html = postProcessing(html);
     }

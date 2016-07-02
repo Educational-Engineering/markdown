@@ -1,7 +1,7 @@
 {
   "name": "etutorial-markdown",
   "description": "A markdown renderer for the E.Tutorial",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "main": "lib/index.js",
   "author": "David Sichau",
   "repository": {
@@ -37,10 +37,7 @@
     ]
   },
   "dependencies": {
-    "cheerio": "^0.20.0",
     "highlight": "^0.2.4",
-    "jquery": "^3.0.0",
-    "jsdom": "^9.2.1",
     "markdown-it": "^7.0.0",
     "markdown-it-anchor": "^2.5.0",
     "underscore": "^1.8.3"

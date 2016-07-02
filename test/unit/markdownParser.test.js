@@ -14,33 +14,6 @@ describe('MarkdownParser', () => {
     });
   });
 
-  describe('ExtractClasses', () => {
-    it('To many class Identifiers.', () => {
-      const text = 'hello {:.blub} mist {:.hello}';
-      const fn = function fn() {
-        mdParser.extractClasses(text);
-      };
-      expect(fn).to.throw('to much class identifiers');
-    });
-
-    it('Not an class identifier.', () => {
-      const text = 'hello {:.blub mist}';
-      const fn = function fn() {
-        mdParser.extractClasses(text);
-      };
-      expect(fn).to.throw('it must be a class');
-    });
-
-    it('Extract class.', () => {
-      let text = 'hello {:.blub}';
-      expect(mdParser.extractClasses(text)).to.be.equal('blub');
-      text = 'hello {:.blub .hello .meier}';
-      expect(mdParser.extractClasses(text)).to.be.equal('blub hello meier');
-      text = 'hello {:.blub .hello.meier}';
-      expect(mdParser.extractClasses(text)).to.be.equal('blub hello.meier');
-    });
-  });
-
   describe('generatePath', () => {
     it('Both with slash', () => {
       expect(mdParser.generatePath('hello/', '/mist')).to.be.equal('hello/mist');
@@ -64,21 +37,6 @@ describe('MarkdownParser', () => {
       expect(mdParser.cleanMarkdown(html)).to.be.equal('test  test <p>test</p> blub ');
     });
   });
-
-/*  xdescribe('parseClasses', () => {
-    it('Add classes', () => {
-      const html = '<div>{:.test .test1} hello<span>mist{:.test}</span></div>';
-      const resultat = '<div class="test test1">{:.test .test1} hello' +
-        '<span class="test">mist{:.test}</span></div>';
-      expect(mdParser.parseClasses(html)).to.be.equal(resultat);
-    });
-    it('Add classes after child tag', () => {
-      const html = '<div>hello<span>mist{:.test}</span>{:.test .test1}</div>';
-      const resultat = '<div class="test test1">hello' +
-        '<span class="test">mist{:.test}</span>{:.test .test1}</div>';
-      expect(mdParser.parseClasses(html)).to.be.equal(resultat);
-    });
-  });*/
 
   describe('parseMarkdown', () => {
     it('Example1', () => {
@@ -113,21 +71,32 @@ describe('MarkdownParser', () => {
     it('Parse Quiz', () => {
       const html = '@BEGIN@{:.quiz}\n - 1\n - 2{:.correct}\n@END@';
       const resultat = '<div class="quiz">\n<div><div class="checkbox"><label>' +
-        '<input type="checkbox" data-value="false">1</label></div></div>\n<div>' +
-        '<div class="checkbox"><label><input type="checkbox" data-value="true">' +
+        '<input type="checkbox"\n data-value="false">1</label></div></div>\n<div>' +
+        '<div class="checkbox"><label><input type="checkbox"\n data-value="true">' +
         '2</label></div></div>\n<div class="center"><button type="button"' +
-        ' class="btn btn-quiz btn-default">check</button></div></div>\n';
+        ' class="btn btn-quiz btn-default">\ncheck</button></div></div>\n';
       expect(mdParser.parseMarkdown(html)).to.be.equal(resultat);
     });
     it('Parse Quiz2', () => {
       const html = '@BEGIN@{:.quiz}\n test **super**\n\n - 1\n - 2{:.correct}\n@END@';
       const resultat = '<div class="quiz">\n<p>test <strong>super</strong>' +
         '</p>\n<div><div class="checkbox"><label>' +
-        '<input type="checkbox" data-value="false">1</label></div></div>\n<div>' +
-        '<div class="checkbox"><label><input type="checkbox" data-value="true">' +
+        '<input type="checkbox"\n data-value="false">1</label></div></div>\n<div>' +
+        '<div class="checkbox"><label><input type="checkbox"\n data-value="true">' +
         '2</label></div></div>\n<div class="center"><button type="button"' +
-        ' class="btn btn-quiz btn-default">check</button></div></div>\n';
+        ' class="btn btn-quiz btn-default">\ncheck</button></div></div>\n';
       expect(mdParser.parseMarkdown(html)).to.be.equal(resultat);
+    });
+  });
+
+  describe('CodeMirror', () => {
+    it('Render Button', () => {
+      const html = '@CODEBOARD@{19870}';
+      const result = '<div class="center"><a href="https://codeboard.io/projects/19870"\n' +
+        'class="btn btn-default">![codeboard_logo_50.png]' +
+        '(/gridfs/fs/hash/6022726bbfb3b9b97257939c1f21ad5f)\n' +
+        'Open IDE</a></div>';
+      expect(mdParser.parseMarkdown(html)).to.be.equal(result);
     });
   });
 });

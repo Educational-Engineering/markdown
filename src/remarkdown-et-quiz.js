@@ -87,9 +87,9 @@ const renderQuiz = function renderQuiz(tokens, idx) {
   return `<div class="${tok.classes}">\n`;
 };
 
-const rendererClose = function rendererClose() {
-  return '<div class="center"><button type="button" class="btn btn-quiz btn-default">' +
-    'check</button></div></div>\n';
+const rendererClose = function rendererClose(options) {
+  return `<div class="center"><button type="button" class="btn btn-quiz btn-default">
+${options.buttonName}</button></div></div>\n`;
 };
 
 const renderQuizItem = function renderQuizItem(tokens, idx) {
@@ -104,11 +104,11 @@ const renderQuizItem = function renderQuizItem(tokens, idx) {
   if (res2) {
     correct = true;
   }
-  return `<div><div class="checkbox"><label><input type="checkbox" 
-          data-value="${correct}">${res[1]}</label></div></div>\n`;
+  return `<div><div class="checkbox"><label><input type="checkbox"
+ data-value="${correct}">${res[1]}</label></div></div>\n`;
 };
 
-export default function remarkablePlugin(md) {
+export default function remarkablePlugin(md, options) {
   md.block.ruler.before('et_block',
     'et_quiz',
     requirementRule.bind(null, md),
@@ -116,6 +116,6 @@ export default function remarkablePlugin(md) {
 
   md.renderer.rules.req_et_quiz_open = renderQuiz;
   md.renderer.rules.req_et_quiz_item = renderQuizItem;
-  md.renderer.rules.req_et_quiz_close = rendererClose;
+  md.renderer.rules.req_et_quiz_close = rendererClose.bind(null, options);
 }
 
