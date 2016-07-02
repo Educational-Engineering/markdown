@@ -1,13 +1,13 @@
-# @et/markdown
+# etutorial-markdown
 
-![Build Status](https://img.shields.io/travis/DavidSichau/@et/markdown.svg)
-![Coverage](https://img.shields.io/coveralls/DavidSichau/@et/markdown.svg)
-![Downloads](https://img.shields.io/npm/dm/@et/markdown.svg)
-![Downloads](https://img.shields.io/npm/dt/@et/markdown.svg)
-![npm version](https://img.shields.io/npm/v/@et/markdown.svg)
-![dependencies](https://img.shields.io/david/DavidSichau/@et/markdown.svg)
-![dev dependencies](https://img.shields.io/david/dev/DavidSichau/@et/markdown.svg)
-![License](https://img.shields.io/npm/l/@et/markdown.svg)
+![Build Status](https://img.shields.io/travis/Educational-Engineering/markdown.svg)
+![Coverage](https://img.shields.io/coveralls/Educational-Engineering/markdown.svg)
+![Downloads](https://img.shields.io/npm/dm/Educational-Engineering/markdown.svg)
+![Downloads](https://img.shields.io/npm/dt/etutorial-markdown.svg)
+![npm version](https://img.shields.io/npm/v/etutorial-markdown.svg)
+![dependencies](https://img.shields.io/david/Educational-Engineering/markdown.svg)
+![dev dependencies](https://img.shields.io/david/dev/Educational-Engineering/markdown.svg)
+![License](https://img.shields.io/github/license/Educational-Engineering/markdown.svg)
 
 A markdown rendere for the E.Tutorial
 
