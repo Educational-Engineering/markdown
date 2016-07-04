@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import MarkdownIt from 'markdown-it';
 import MarkdownItAnchor from 'markdown-it-anchor';
-import hljs from 'highlight';
+import hljs from 'highlight.js';
 
 import etPlugin from './remarkdown-et';
 import quizPlugin from './remarkdown-et-quiz';
