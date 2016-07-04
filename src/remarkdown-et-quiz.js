@@ -10,15 +10,18 @@
  *
  */
 
-const regexQuiz = /@BEGIN@[ \t]?\{:(.*\.quiz.*)\}[ \t]?[\r\n]([\s}\S]*)@END@/;
+// const regexQuiz = /^@BEGIN@[ \t]?\{:(.*\.quiz.*)\}[ \t]?[\r\n]([\s\S]*)@END@/;
+const regexQuizBegin = /^@BEGIN@[ \t]?\{:(.*\.quiz.*)\}/;
+const regexStart = /^@BEGIN@[ \t]?\{:(.*)\}/;
+const regexEnd = /^@END@/;
 const regexEntry = /^[ \t]?- (.*)/;
 const regexEntryLabel = /^[ \t]?- (.*)(?:\{:.*\})?/;
 const regexCorrect = /\{:[ \t]?.correct[ \t]?}/;
-const requirementRule = function requirementRule(md, state, start, endLine) {
+const requirementRule = function requirementRule(md, state, start) {
   // the string of lines not parsed yet:
   const lastLines = state.src.substring(state.bMarks[state.line]);
   // use of regex:
-  const res = lastLines.match(regexQuiz);
+  const res = lastLines.match(regexQuizBegin);
   if (res == null) { // if there's no match
     return false;
   }
@@ -31,8 +34,6 @@ const requirementRule = function requirementRule(md, state, start, endLine) {
   const oldLineMax = state.lineMax;
   state.parentType = 'quiz';
 
-  // const nbLines = res[2].split('\n').length; // the number of lines of the requirement block
-
   state.tokens.push({
     type: 'req_et_quiz_open',
     tag: 'div',
@@ -44,24 +45,30 @@ const requirementRule = function requirementRule(md, state, start, endLine) {
 
   let nextLine = start;
   let tempStart = start + 1;
+  let level = 0;
   for (;;) {
     nextLine++;
-    if (nextLine >= endLine) {
-      break;
-    }
     const line = state.src.substring(state.bMarks[nextLine]);
-    if (!regexEntry.test(line)) {
-      continue;
-    } else {
-      state.md.block.tokenize(state, tempStart, nextLine - 1);
-      tempStart = nextLine;
-      state.tokens.push({
-        type: 'req_et_quiz_item',
-        level: state.level,
-        content: line.split('\n')[0],
-        nesting: -1,
-      });
+    if (regexStart.test(line)) {
+      level++;
     }
+    if (!regexEnd.test(line)) {
+      if (regexEntry.test(line)) {
+        state.md.block.tokenize(state, tempStart, nextLine - 1);
+        tempStart = nextLine;
+        state.tokens.push({
+          type: 'req_et_quiz_item',
+          level: state.level,
+          content: line.split('\n')[0],
+          nesting: -1,
+        });
+      }
+      continue;
+    } else if (level > 0) {
+      level--;
+      continue;
+    }
+    break;
   }
 
 
@@ -88,11 +95,10 @@ const renderQuiz = function renderQuiz(tokens, idx) {
 };
 
 const rendererClose = function rendererClose(options) {
-  return `<div class="center"><button type="button" class="btn btn-quiz btn-default">
-${options.buttonName}</button></div></div>\n`;
+  return `<div class="center"><button type="button" class="btn btn-quiz btn-default">${options.buttonName}</button></div></div>\n`;
 };
 
-const renderQuizItem = function renderQuizItem(tokens, idx) {
+const renderQuizItem = function renderQuizItem(md, tokens, idx) {
   const tok = tokens[idx];
   const content = tok.content;
   const res = content.match(regexEntryLabel);
@@ -104,8 +110,7 @@ const renderQuizItem = function renderQuizItem(tokens, idx) {
   if (res2) {
     correct = true;
   }
-  return `<div><div class="checkbox"><label><input type="checkbox"
- data-value="${correct}">${res[1]}</label></div></div>\n`;
+  return `<div><div class="checkbox"><label><input type="checkbox" data-value="${correct}">${md.renderInline(res[1])}</label></div></div>\n`;
 };
 
 export default function remarkablePlugin(md, options) {
@@ -115,7 +120,7 @@ export default function remarkablePlugin(md, options) {
     { alt: [] });
 
   md.renderer.rules.req_et_quiz_open = renderQuiz;
-  md.renderer.rules.req_et_quiz_item = renderQuizItem;
+  md.renderer.rules.req_et_quiz_item = renderQuizItem.bind(null, md);
   md.renderer.rules.req_et_quiz_close = rendererClose.bind(null, options);
 }
 

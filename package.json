@@ -1,7 +1,7 @@
 {
   "name": "etutorial-markdown",
   "description": "A markdown renderer for the E.Tutorial",
-  "version": "0.4.2",
+  "version": "0.4.8",
   "main": "lib/index.js",
   "author": "David Sichau",
   "repository": {
@@ -34,7 +34,10 @@
   "eslintConfig": {
     "extends": [
       "airbnb"
-    ]
+    ],
+    "rules": {
+      "max-len": [1, 120, 2]
+    }
   },
   "dependencies": {
     "highlight.js": "^9.5.0",

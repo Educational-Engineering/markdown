@@ -38,8 +38,7 @@ const requirementRule = function requirementRule(md, state, start) {
 const rendererCodeboard = function rendererCodeboard(options, tokens, idx) {
   const tok = tokens[idx];
   return `<div class="center"><a href="https://codeboard.io/projects/${tok.codeboardId}"
-class="btn btn-default">![codeboard_logo_50.png](/gridfs/fs/hash/6022726bbfb3b9b97257939c1f21ad5f)
-${options.buttonName}</a></div>`;
+class="btn btn-default btn-codeboard"><img src="/gridfs/fs/hash/6022726bbfb3b9b97257939c1f21ad5f" alt="codeboard_logo_50.png"> ${options.buttonName}</a></div>`;
 };
 
 export default function remarkablePlugin(md, options) {

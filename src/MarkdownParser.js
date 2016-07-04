@@ -8,7 +8,7 @@ import quizPlugin from './remarkdown-et-quiz';
 import codeboardPlugin from './remarkdown-codeboard';
 
 
-export class MarkdownParser {
+export default class MarkdownParser {
   /**
    * Constructs the MarkdownParser
    * @class MarkdownPaser
@@ -54,9 +54,10 @@ export class MarkdownParser {
    *  - {:.fsfd .fsfsd} are interpreted as classes
    * @method parseMarkdown
    * @param {String} input The markdown string
+   * @param {Object} options A Object with the elements quizButton and codeboardButton for the i18n for these buttons
    * @return {String} The html string
    */
-  parseMarkdown(input, postProcessing) {
+  parseMarkdown(input, options) {
     const md = new MarkdownIt({
       highlight(str, lang) {
         if (lang && hljs.getLanguage(lang)) {
@@ -68,15 +69,12 @@ export class MarkdownParser {
     md.use(MarkdownItAnchor);
     md.use(etPlugin);
     md.use(quizPlugin, {
-      buttonName: 'check',
+      buttonName: options.quizButton,
     });
     md.use(codeboardPlugin, {
-      buttonName: 'Open IDE',
+      buttonName: options.codeboardButton,
     });
     let html = md.render(input);
-    if (postProcessing) {
-      html = postProcessing(html);
-    }
     html = this.cleanMarkdown(html);
     return html;
   }
