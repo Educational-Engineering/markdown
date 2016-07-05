@@ -62,9 +62,8 @@ export default class MarkdownParser {
       highlight(str, lang) {
         if (lang && hljs.getLanguage(lang)) {
           return hljs.highlight(lang, str).value;
-        } else {
-          return hljs.highlightAuto(str).value;
         }
+        return hljs.highlightAuto(str).value;
       },
       html: true,
     });
