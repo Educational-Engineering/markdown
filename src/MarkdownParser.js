@@ -62,9 +62,11 @@ export default class MarkdownParser {
       highlight(str, lang) {
         if (lang && hljs.getLanguage(lang)) {
           return hljs.highlight(lang, str).value;
+        } else {
+          return hljs.highlightAuto(str).value;
         }
-        return ''; // use external default escaping
       },
+      html: true,
     });
     md.use(MarkdownItAnchor);
     md.use(etPlugin);
