@@ -75,9 +75,7 @@ export default class MarkdownParser {
     md.use(codeboardPlugin, {
       buttonName: options.codeboardButton,
     });
-    md.renderer.rules.table_open = () => {
-      return '<table class="table">';
-    };
+    md.renderer.rules.table_open = () => '<table class="table">';
     let html = md.render(input);
     html = this.cleanMarkdown(html);
     return html;
