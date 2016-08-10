@@ -1,7 +1,7 @@
 {
   "name": "etutorial-markdown",
   "description": "A markdown renderer for the E.Tutorial",
-  "version": "0.4.11",
+  "version": "0.5.0",
   "main": "lib/index.js",
   "author": "David Sichau",
   "repository": {
