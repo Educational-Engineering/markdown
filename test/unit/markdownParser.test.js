@@ -59,6 +59,12 @@ describe('MarkdownParser', () => {
         '\n<li>geht</li>\n</ul>\n<hr>\n</div>';
       expect(mdParser.parseMarkdown(html, { quizButton: 'check', codeboardButton: 'open IDE' })).to.be.equal(resultat);
     });
+    it('Collapse', () => {
+      const html = '@BEGIN@ {: .task .collapse}\n\n - hier\n - geht \n_______\n\n@END@\n';
+      const resultat = '<div class="task collapse"><div class="collapse-inner">\n<ul>\n<li>hier</li>' +
+        '\n<li>geht</li>\n</ul>\n<hr>\n</div></div>';
+      expect(mdParser.parseMarkdown(html, { quizButton: 'check', codeboardButton: 'open IDE' })).to.be.equal(resultat);
+    });
     it('Example4', () => {
       const html = '@BEGIN@ {: .task .blub}\n@BEGIN@{:.blub2}' +
         '\n - hier\n - geht \n@END@\n_______\n\n@END@\n';

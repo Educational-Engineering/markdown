@@ -64,6 +64,7 @@ const requirementRule = function requirementRule(md, state, start, endLine) {
 
   state.tokens.push({
     type: 'req_et_block_close',
+    classes,
     level: state.level,
     block: true,
     nesting: -1,
@@ -81,10 +82,17 @@ const requirementRule = function requirementRule(md, state, start, endLine) {
  */
 const rendererOpen = function rendererOpen(tokens, idx) {
   const tok = tokens[idx];
+  if (tok.classes.includes('collapse')) {
+    return `<div class="${tok.classes}"><div class="collapse-inner">\n`;
+  }
   return `<div class="${tok.classes}">\n`;
 };
 
-const rendererClose = function rendererClose() {
+const rendererClose = function rendererClose(tokens, idx) {
+  const tok = tokens[idx];
+  if (tok.classes.includes('collapse')) {
+    return '</div></div>';
+  }
   return '</div>';
 };
 
