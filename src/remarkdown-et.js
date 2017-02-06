@@ -83,27 +83,27 @@ const requirementRule = function requirementRule(md, state, start, endLine) {
 const rendererOpen = function rendererOpen(tokens, idx) {
   const tok = tokens[idx];
   if (tok.classes.includes('collapse')) {
-    return `<div class="${tok.classes}"><div class="collapse-inner">\n`;
+    return `<div class="collapse-outer"><div class="${tok.classes}">\n`;
   }
   return `<div class="${tok.classes}">\n`;
 };
 
-const rendererClose = function rendererClose(tokens, idx) {
+const rendererClose = function rendererClose(options, tokens, idx) {
   const tok = tokens[idx];
   if (tok.classes.includes('collapse')) {
-    return '</div></div>';
+    return `<div class="center"><button class="btn btn-close">${options.close}</button></div></div></div><div class="center"><button class="btn btn-open">${options.open}</button></div>`;
   }
   return '</div>';
 };
 
 
-export default function remarkablePlugin(md) {
+export default function remarkablePlugin(md, options) {
   md.block.ruler.before('paragraph',
     'et_block',
     requirementRule.bind(null, md),
     { alt: [] });
 
   md.renderer.rules.req_et_block_open = rendererOpen;
-  md.renderer.rules.req_et_block_close = rendererClose;
+  md.renderer.rules.req_et_block_close = rendererClose.bind(null, options);
 }
 

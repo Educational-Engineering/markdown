@@ -68,7 +68,10 @@ export default class MarkdownParser {
       html: true,
     });
     md.use(MarkdownItAnchor);
-    md.use(etPlugin);
+    md.use(etPlugin, {
+      open: options.open,
+      close: options.close,
+    });
     md.use(quizPlugin, {
       buttonName: options.quizButton,
     });
