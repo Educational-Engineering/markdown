@@ -17,19 +17,6 @@ describe('MarkdownParser', () => {
     });
   });
 
-  describe('generatePath', () => {
-    it('Both with slash', () => {
-      expect(mdParser.generatePath('hello/', '/mist')).to.be.equal('hello/mist');
-    });
-    it('None with slash', () => {
-      expect(mdParser.generatePath('hello', 'mist')).to.be.equal('hello/mist');
-    });
-
-    it('One with slash', () => {
-      expect(mdParser.generatePath('hello', '/mist')).to.be.equal('hello/mist');
-      expect(mdParser.generatePath('hello/', 'mist')).to.be.equal('hello/mist');
-    });
-  });
   describe('CleanMarkdown', () => {
     it('Remove classes', () => {
       const html = '<div>{:.test .test} hello<span>mist{:.test}</span></div>';

@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import MarkdownIt from 'markdown-it';
 import MarkdownItAnchor from 'markdown-it-anchor';
 import hljs from 'highlight.js';
@@ -18,22 +17,6 @@ export default class MarkdownParser {
     this.picturePath = '/';
     this.reClassGlobal = /\{:((\s|\S)*?)\}/gm;
     this.reEmptyParagraph = /<p>\s*<\/p>/g;
-  }
-
-  /**
-   * Generates the correct path
-   * @method generatePath
-   * @param {String} url The url
-   * @param {String} path The path that should be appendet
-   * @return {String} The combined url
-   */
-  generatePath(url, path) {
-    if (path[0] === '/' && _.last(url) === '/') {
-      return url + path.slice(1);
-    } else if (path[0] !== '/' && _.last(url) !== '/') {
-      return `${url}/${path}`;
-    }
-    return url + path;
   }
 
   /**

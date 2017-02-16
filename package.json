@@ -1,7 +1,7 @@
 {
   "name": "etutorial-markdown",
   "description": "A markdown renderer for the E.Tutorial",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "main": "lib/index.js",
   "author": "David Sichau",
   "repository": {
@@ -37,13 +37,16 @@
       "airbnb"
     ],
     "rules": {
-      "max-len": [1, 120, 2]
+      "max-len": [
+        1,
+        120,
+        2
+      ]
     }
   },
   "dependencies": {
     "highlight.js": "^9.5.0",
     "markdown-it": "^7.0.0",
-    "markdown-it-anchor": "^2.5.0",
-    "underscore": "^1.8.3"
+    "markdown-it-anchor": "^2.5.0"
   }
 }
